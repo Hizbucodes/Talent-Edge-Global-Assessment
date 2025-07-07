@@ -210,7 +210,7 @@ export const getEnrolledStudentsForSpecificCourse = async (req, res) => {
   }
 };
 
-export const deleteCourseCreatedByInstructor = async (req, res) => {
+export const deleteACourseCreatedByInstructor = async (req, res) => {
   try {
     const course = await Course.findById(req.params.id);
 
