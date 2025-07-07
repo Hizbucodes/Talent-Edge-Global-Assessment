@@ -1,6 +1,7 @@
 import express from "express";
 import {
   createCourse,
+  deleteCourseCreatedByInstructor,
   enrollInCourse,
   getAllCourses,
   getAllCoursesPostedByInstructor,
@@ -63,5 +64,12 @@ router.get(
   verifyToken,
   authorizeRoles("instructor"),
   getEnrolledStudentsForSpecificCourse
+);
+
+router.delete(
+  "/deleteCourseCreatedByInstructor/:id",
+  verifyToken,
+  authorizeRoles("instructor"),
+  deleteCourseCreatedByInstructor
 );
 export default router;

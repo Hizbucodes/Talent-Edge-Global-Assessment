@@ -209,3 +209,26 @@ export const getEnrolledStudentsForSpecificCourse = async (req, res) => {
     res.status(500).json({ status: "fail", message: "Server error" });
   }
 };
+
+export const deleteCourseCreatedByInstructor = async (req, res) => {
+  try {
+    const course = await Course.findById(req.params.id);
+
+    if (!course) {
+      return res.status(404).json({ message: "Course not found." });
+    }
+
+    await course.deleteOne();
+
+    res.status(200).json({
+      status: "success",
+      message: "Course deleted successfully.",
+    });
+  } catch (error) {
+    console.error("Delete Course Error:", error);
+    res.status(500).json({
+      status: "fail",
+      message: "Internal server error.",
+    });
+  }
+};
