@@ -209,3 +209,32 @@ export const getEnrolledStudentsForSpecificCourse = async (req, res) => {
     res.status(500).json({ status: "fail", message: "Server error" });
   }
 };
+
+export const deleteACourseCreatedByInstructor = async (req, res) => {
+  try {
+    const course = await Course.findById(req.params.id);
+
+    if (!course) {
+      return res.status(404).json({ message: "Course not found." });
+    }
+
+    if (course.instructor.toString() !== req.user.id.toString()) {
+      return res
+        .status(403)
+        .json({ message: "Access denied. You are not the course owner." });
+    }
+
+    await course.deleteOne();
+
+    res.status(200).json({
+      status: "success",
+      message: "Course deleted successfully.",
+    });
+  } catch (error) {
+    console.error("Delete Course Error:", error);
+    res.status(500).json({
+      status: "fail",
+      message: "Internal server error.",
+    });
+  }
+};
