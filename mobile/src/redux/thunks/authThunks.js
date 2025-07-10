@@ -17,3 +17,21 @@ export const loginUser = createAsyncThunk(
     }
   }
 );
+
+export const registerUser = createAsyncThunk(
+  "auth/registerUser",
+  async (userData, thunkAPI) => {
+    try {
+      const response = await API.post("/auth/register", userData);
+
+      await saveToken(response.data.token);
+
+      return response.data;
+    } catch (error) {
+      const errorMsg =
+        error?.response?.data?.message ||
+        "Registration failed. Please try again.";
+      return thunkAPI.rejectWithValue(errorMsg);
+    }
+  }
+);

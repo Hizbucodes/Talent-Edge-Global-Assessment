@@ -14,11 +14,15 @@ import Button from "../components/Form/Button";
 import CheckBox from "../components/Form/CheckBox";
 import { VALIDATION_RULES } from "../constants/validationRules";
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
+import { registerUser } from "../redux/thunks/authThunks";
 
 const screenWidth = Dimensions.get("window").width;
 
 const RegisterScreen = () => {
+  const { loading } = useSelector((state) => state.auth);
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const roles = [
     { label: "Student", value: "student" },
@@ -43,10 +47,28 @@ const RegisterScreen = () => {
 
   const currentPassword = watch("password", "");
 
-  const submitFormHandler = (data) => {
-    console.log(data);
-  };
+  const submitFormHandler = async (data) => {
+    try {
+      const res = await dispatch(registerUser(data)).unwrap();
 
+      if (res.user.role === "student") {
+        navigation.replace("studentMain");
+      }
+      if (res.user.role === "instructor") {
+        navigation.replace("instructorMain");
+      }
+    } catch (error) {
+      dispatch(
+        showToast({
+          title: "Error",
+          message: error || "Something went wrong",
+          type: "error",
+          duration: 4000,
+          position: "top",
+        })
+      );
+    }
+  };
   return (
     <ScrollView style={styles.container}>
       <View style={styles.contentContainer}>
@@ -137,9 +159,10 @@ const RegisterScreen = () => {
 
             <View style={styles.signInButtonContainer}>
               <Button
-                title={"Sign In"}
+                title={"Sign Up"}
                 onPress={handleSubmit(submitFormHandler)}
                 disabled={!isValid}
+                loading={loading}
               />
             </View>
 

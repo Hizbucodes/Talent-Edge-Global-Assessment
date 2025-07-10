@@ -52,7 +52,6 @@ const LoginScreen = () => {
           position: "top",
         })
       );
-      console.log(error);
     }
   };
 

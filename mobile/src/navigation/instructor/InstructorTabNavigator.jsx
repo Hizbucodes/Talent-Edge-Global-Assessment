@@ -1,9 +1,8 @@
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import InstructorMyCoursesScreen from "../../screens/Instructor/InstructorMyCoursesScreen";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Colors } from "../../constants/colors";
 import InstructorCreateCourseScreen from "../../screens/Instructor/InstructorCreateCourseScreen";
-import InstructorProfileScreen from "../../screens/Instructor/InstructorProfileScreen";
+import InstructorMyCoursesScreen from "../../screens/Instructor/InstructorMyCoursesScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -17,9 +16,6 @@ const InstructorTabNavigator = () => {
           break;
         case "Add Course":
           iconName = focused ? "add-circle-sharp" : "add-circle-outline";
-          break;
-        case "Profile":
-          iconName = focused ? "person-sharp" : "person";
       }
 
       return <Ionicons name={iconName} color={color} size={size} />;
@@ -42,11 +38,6 @@ const InstructorTabNavigator = () => {
       <Tab.Screen
         name="Add Course"
         component={InstructorCreateCourseScreen}
-        options={{ headerShown: false }}
-      />
-      <Tab.Screen
-        name="Profile"
-        component={InstructorProfileScreen}
         options={{ headerShown: false }}
       />
     </Tab.Navigator>

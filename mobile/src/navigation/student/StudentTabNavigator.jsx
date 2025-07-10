@@ -4,7 +4,6 @@ import { Colors } from "../../constants/colors";
 import ChatScreen from "../../screens/Student/ChatScreen";
 import EnrolledCoursesScreen from "../../screens/Student/EnrolledCoursesScreen";
 import StudentHomeScreen from "../../screens/Student/StudentHomeScreen";
-import StudentProfileScreen from "../../screens/Student/StudentProfileScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -21,9 +20,6 @@ const StudentTabNavigator = () => {
           break;
         case "Ask AI":
           iconName = focused ? "chatbox" : "chatbox";
-          break;
-        case "Profile":
-          iconName = focused ? "person-sharp" : "person";
       }
 
       return <Ionicons name={iconName} color={color} size={size} />;
@@ -44,9 +40,12 @@ const StudentTabNavigator = () => {
         options={{ headerShown: false }}
       />
 
-      <Tab.Screen name="My Courses" component={EnrolledCoursesScreen} />
+      <Tab.Screen
+        name="My Courses"
+        component={EnrolledCoursesScreen}
+        options={{ headerShown: false }}
+      />
       <Tab.Screen name="Ask AI" component={ChatScreen} />
-      <Tab.Screen name="Profile" component={StudentProfileScreen} />
     </Tab.Navigator>
   );
 };
