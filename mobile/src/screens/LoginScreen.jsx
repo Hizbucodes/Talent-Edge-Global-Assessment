@@ -1,3 +1,5 @@
+import { useNavigation } from "@react-navigation/native";
+import { useForm } from "react-hook-form";
 import {
   Dimensions,
   Image,
@@ -7,27 +9,51 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Colors } from "../constants/colors";
-import Input from "../components/form/Input";
-import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
 import Button from "../components/Form/Button";
+import Input from "../components/Form/Input";
+import { Colors } from "../constants/colors";
 import { VALIDATION_RULES } from "../constants/validationRules";
-import { useNavigation } from "@react-navigation/native";
+import { showToast } from "../redux/slices/toastSlice";
+import { loginUser } from "../redux/thunks/authThunks";
 
 const screenWidth = Dimensions.get("window").width;
 
 const LoginScreen = () => {
-  const navigation = useNavigation();
+  const { loading } = useSelector((state) => state.auth);
 
-  const { control, handleSubmit, watch, reset } = useForm({
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
+
+  const { control, handleSubmit, watch } = useForm({
     defaultValues: {
       username: "",
       password: "",
     },
   });
 
-  const submitFormHandler = (data) => {
-    console.log(data);
+  const submitFormHandler = async (data) => {
+    try {
+      const res = await dispatch(loginUser(data)).unwrap();
+
+      if (res.user.role === "student") {
+        navigation.replace("studentMain");
+      }
+      if (res.user.role === "instructor") {
+        navigation.replace("instructorMain");
+      }
+    } catch (error) {
+      dispatch(
+        showToast({
+          title: "Error",
+          message: error || "Something went wrong",
+          type: "error",
+          duration: 4000,
+          position: "top",
+        })
+      );
+      console.log(error);
+    }
   };
 
   return (
@@ -69,6 +95,8 @@ const LoginScreen = () => {
               <Button
                 title={"Sign In"}
                 onPress={handleSubmit(submitFormHandler)}
+                loading={loading}
+                disabled={loading}
               />
             </View>
 

@@ -1,4 +1,5 @@
 import {
+  Dimensions,
   Image,
   ScrollView,
   StyleSheet,
@@ -7,12 +8,14 @@ import {
   View,
 } from "react-native";
 import { Colors } from "../constants/colors";
-import Input from "../components/form/Input";
+import Input from "../components/Form/Input";
 import { Controller, useForm } from "react-hook-form";
 import Button from "../components/Form/Button";
 import CheckBox from "../components/Form/CheckBox";
 import { VALIDATION_RULES } from "../constants/validationRules";
 import { useNavigation } from "@react-navigation/native";
+
+const screenWidth = Dimensions.get("window").width;
 
 const RegisterScreen = () => {
   const navigation = useNavigation();
@@ -163,7 +166,6 @@ export default RegisterScreen;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.white,
-    paddingHorizontal: 30,
   },
   logo: {
     width: 150,
@@ -172,6 +174,8 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     marginVertical: 60,
+    width: screenWidth - 60,
+    margin: "auto",
   },
   headerContainer: {
     flexDirection: "column",
@@ -206,6 +210,7 @@ const styles = StyleSheet.create({
   checkBoxTitleText: {
     fontWeight: "bold",
     fontSize: 18,
+    color: Colors.primary,
   },
   requiredAsterisk: {
     color: Colors.requiredAsterisk,
