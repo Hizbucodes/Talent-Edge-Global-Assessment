@@ -2,7 +2,7 @@ import axios from "axios";
 import { getToken } from "../utils/token";
 
 const API = axios.create({
-  baseURL: "http://192.168.8.102:3000/api/v1",
+  baseURL: "http://192.168.8.101:3000/api/v1",
 });
 
 // add the token before every api request to backend server
