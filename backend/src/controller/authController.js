@@ -28,6 +28,10 @@ export const register = async (req, res) => {
       role: role || "student",
     });
 
+    const token = generateToken({
+      id: newUser._id,
+      role: newUser.role,
+    });
     res.status(201).json({
       status: "success",
       message: `User registered with username ${username}`,
@@ -36,6 +40,7 @@ export const register = async (req, res) => {
         username: newUser.username,
         role: newUser.role,
       },
+      token,
     });
   } catch (error) {
     console.error("Register Error:", error);
