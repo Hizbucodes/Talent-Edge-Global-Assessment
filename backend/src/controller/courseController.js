@@ -65,7 +65,9 @@ export const enrollInCourse = async (req, res) => {
       return res.status(404).json({ message: "Course not found." });
     }
 
-    const alreadyEnrolled = course.enrolledStudents.includes(req.user.id);
+    const alreadyEnrolled = course.enrolledStudents.some((studentId) =>
+      studentId.equals(req.user.id)
+    );
     if (alreadyEnrolled) {
       return res
         .status(400)
@@ -82,6 +84,7 @@ export const enrollInCourse = async (req, res) => {
     res.status(200).json({
       status: "success",
       message: `Enrolled in course: ${course.title}`,
+      course,
     });
   } catch (error) {
     console.error("Enroll Error:", error);
