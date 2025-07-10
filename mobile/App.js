@@ -1,12 +1,20 @@
+import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
+import { Provider } from "react-redux";
+import AppNavigator from "./src/navigation/AppNavigator";
+import store from "./src/redux/store";
+import GlobalToast from "./src/components/Toast/GlobalToast";
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Online Learning Mobile App</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Provider store={store}>
+      <NavigationContainer>
+        <StatusBar style="light" />
+        <AppNavigator />
+        <GlobalToast />
+      </NavigationContainer>
+    </Provider>
   );
 }
 
