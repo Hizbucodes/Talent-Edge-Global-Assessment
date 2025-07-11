@@ -1,5 +1,7 @@
+import { Feather, FontAwesome5 } from "@expo/vector-icons";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { useLayoutEffect, useState } from "react";
+import { useLayoutEffect } from "react";
 import {
   Dimensions,
   ScrollView,
@@ -8,41 +10,23 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Colors } from "../../constants/colors";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { FontAwesome5 } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  enrollInCourse,
-  fetchEnrolledCourses,
-} from "../../redux/thunks/studentThunks";
-import { showToast } from "../../redux/slices/toastSlice";
+import { Colors } from "../../constants/colors";
 
 const screenWidth = Dimensions.get("window").width;
 
-const StudentCourseDetailScreen = () => {
+const InstructorCourseDetailScreen = () => {
   const route = useRoute();
 
-  const { allCourses } = useSelector((state) => state.course);
+  const { myCourses } = useSelector((state) => state.course);
   const { user } = useSelector((state) => state.auth);
 
-  const courseDetail = allCourses.find(
+  const courseDetail = myCourses.find(
     (item) => item?._id === route?.params?.courseId
-  );
-
-  const alreadyEnrolled = courseDetail?.enrolledStudents?.some(
-    (idOrObj) =>
-      (typeof idOrObj === "string" && idOrObj === user._id) ||
-      idOrObj._id === user._id
   );
 
   const dispatch = useDispatch();
   const navigation = useNavigation();
-
-  const enrolledStudentsText =
-    courseDetail.enrolledStudents.length > 0
-      ? "People Already Enrolled"
-      : "No one's enrolled yet, Claim the first spot! 🚀";
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -50,91 +34,60 @@ const StudentCourseDetailScreen = () => {
     });
   }, []);
 
-  const handleEnrollClick = async (id) => {
-    try {
-      const resultAction = await dispatch(enrollInCourse(id));
-
-      if (enrollInCourse.fulfilled.match(resultAction)) {
-        dispatch(
-          showToast({
-            title: "Success",
-            message:
-              "Enrollment complete! Get ready for an exciting learning journey.",
-            type: "success",
-            duration: 4000,
-            position: "top",
-          })
-        );
-        dispatch(fetchEnrolledCourses());
-      } else {
-        dispatch(
-          showToast({
-            title: "Error we",
-            message:
-              resultAction.payload || "Failed to enroll. Please try again.",
-            type: "error",
-            duration: 4000,
-            position: "top",
-          })
-        );
-      }
-    } catch (error) {
-      dispatch(
-        showToast({
-          title: "Error",
-          message: error.message || "Something went wrong. Please try again.",
-          type: "error",
-          duration: 4000,
-          position: "top",
-        })
-      );
-    }
-  };
-
   return (
     <ScrollView style={styles.container}>
       <View style={styles.instructorCourseDetailContainer}>
         <View style={styles.iconContainer}>
           <FontAwesome name="book" size={80} color={Colors.primary} />
+          <TouchableOpacity
+            style={styles.editCourseButton}
+            onPress={() =>
+              navigation.navigate("editCourse", { courseId: courseDetail?._id })
+            }
+          >
+            <Text style={styles.editCourseText}>Edit</Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.detailsTextContainer}>
           <Text style={styles.courseTitle}>{courseDetail?.title}</Text>
           <Text style={styles.courseDescription}>
             {courseDetail?.description}
           </Text>
-          <View style={styles.courseInstructorUsernameContainer}>
-            <FontAwesome5 name="user" size={20} color={Colors.primary} />
-            <Text style={styles.courseInstructorUsername}>
-              {courseDetail?.instructor?.username}
-            </Text>
-          </View>
-        </View>
-
-        <View style={styles.buttonWithEnrolledStudentsContainer}>
-          <TouchableOpacity
-            style={[
-              styles.enrollNowButton,
-              { opacity: alreadyEnrolled ? 0.8 : 1 },
-            ]}
-            onPress={() => handleEnrollClick(courseDetail?._id)}
-            disabled={alreadyEnrolled}
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
           >
-            <Text style={styles.enrollNowText}>
-              {alreadyEnrolled
-                ? "✅ You're already enrolled"
-                : "Enroll for Free"}
-            </Text>
-          </TouchableOpacity>
+            <View style={styles.courseInstructorUsernameContainer}>
+              <FontAwesome5 name="user" size={20} color={Colors.primary} />
+              <Text style={styles.courseInstructorUsername}>
+                {user?.username}
+              </Text>
+            </View>
 
-          <View style={styles.studentEnrolledTextContainer}>
-            <Text style={styles.enrolledStudentLengthValue}>
-              {courseDetail?.enrolledStudents.length > 0
-                ? courseDetail?.enrolledStudents.length
-                : ""}
-            </Text>
-            <Text style={styles.enrolledStudentLengthText}>
-              {enrolledStudentsText}
-            </Text>
+            <TouchableOpacity
+              style={{
+                backgroundColor: Colors.secondary,
+                borderRadius: 8,
+                width: 170,
+                alignItems: "center",
+                justifyContent: "center",
+                height: 30,
+                flexDirection: "row",
+              }}
+              onPress={() =>
+                navigation.navigate("enrolledStudents", {
+                  courseId: courseDetail?._id,
+                })
+              }
+            >
+              <Text style={{ fontWeight: "bold", color: Colors.primary }}>
+                See Enrolled Students
+              </Text>
+              <Feather name="arrow-up-right" size={20} color={Colors.primary} />
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -167,7 +120,7 @@ const StudentCourseDetailScreen = () => {
   );
 };
 
-export default StudentCourseDetailScreen;
+export default InstructorCourseDetailScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -181,6 +134,9 @@ const styles = StyleSheet.create({
     width: screenWidth - 60,
     alignSelf: "center",
     marginTop: 40,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   courseTitle: {
     fontWeight: "bold",
@@ -304,5 +260,19 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     borderBottomColor: Colors.primary,
     color: Colors.primary,
+  },
+  editCourseButton: {
+    backgroundColor: Colors.successColor,
+    width: 100,
+    alignItems: "center",
+    justifyContent: "center",
+    height: 50,
+    borderRadius: 10,
+  },
+  editCourseText: {
+    color: Colors.white,
+    fontWeight: "bold",
+    fontSize: 16,
+    letterSpacing: 0.8,
   },
 });

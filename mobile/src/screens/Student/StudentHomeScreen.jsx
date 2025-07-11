@@ -58,6 +58,7 @@ const StudentHomeScreen = () => {
             {item.instructor.username}
           </Text>
         </View>
+
         <Text style={styles.courseTileTitle}>{item.title}</Text>
       </TouchableOpacity>
     );

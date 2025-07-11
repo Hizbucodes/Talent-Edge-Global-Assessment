@@ -5,6 +5,18 @@ export const VALIDATION_MESSAGE = {
   PASSWORDS_MATCH: "Passwords must match",
 };
 
+export const COURSE_VALIDATION_RULES = {
+  title: {
+    required: VALIDATION_MESSAGE.REQUIRED,
+  },
+  description: {
+    required: VALIDATION_MESSAGE.REQUIRED,
+  },
+  content: {
+    required: VALIDATION_MESSAGE.REQUIRED,
+  },
+};
+
 export const VALIDATION_RULES = {
   username: {
     required: VALIDATION_MESSAGE.REQUIRED,
