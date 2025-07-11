@@ -1,5 +1,5 @@
 
-# 📚 Online Learning Mobile App
+# 📚 Online Learning Mobile App - Assessment
 
 A full-stack online learning platform built using Node.js, Express, MongoDB, React Native (Expo), and OpenAI's GPT model. Students can browse and enroll in courses, instructors can create and manage them, and AI can recommend relevant courses based on student prompts.
 
