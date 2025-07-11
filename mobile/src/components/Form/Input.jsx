@@ -20,6 +20,7 @@ const Input = (
     containerStyle,
     inputStyle,
     errorTextStyle,
+    multiline,
     ...props
   },
   ref
@@ -52,6 +53,7 @@ const Input = (
                 placeholder={placeholder}
                 placeholderTextColor={placeholderColor}
                 secureTextEntry={secureText}
+                multiline={multiline}
                 style={[
                   {
                     borderRadius: 12,

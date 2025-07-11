@@ -9,4 +9,5 @@ export const Colors = {
   errorColor: "#fd0202",
   requiredAsterisk: "#d80202",
   linkText: "#0e69f9",
+  successColor: "#388E3C",
 };
