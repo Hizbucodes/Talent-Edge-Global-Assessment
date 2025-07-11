@@ -3,6 +3,7 @@ import "dotenv/config";
 import { dbConnect } from "./config/dbConnect.js";
 import authRoutes from "./routes/authRoutes.js";
 import courseRoutes from "./routes/courseRoutes.js";
+import chatGPTRoutes from "./routes/chatGPTRoutes.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -20,6 +21,7 @@ app.get("/index", (req, res) => {
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/courses", courseRoutes);
+app.use("/api/v1/chatgpt", chatGPTRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port: ${PORT}`);
