@@ -167,27 +167,35 @@ export const getCourseByIdCreatedByInstructor = async (req, res) => {
 export const updateACourseCreatedByInstructor = async (req, res) => {
   try {
     const { title, description, content } = req.body;
+    const courseId = req.params.id;
+    const instructorId = req.user.id;
 
-    const course = await Course.findById(req.params.id);
+    const course = await Course.findById(courseId);
 
     if (!course) {
       return res.status(404).json({ message: "Course not found." });
     }
 
-    course.title = title || course.title;
-    course.description = description || course.description;
-    course.content = content || course.content;
+    if (course.instructor.toString() !== instructorId) {
+      return res
+        .status(403)
+        .json({ message: "Unauthorized to update this course." });
+    }
 
-    await course.save();
+    if (title?.trim()) course.title = title;
+    if (description?.trim()) course.description = description;
+    if (Array.isArray(content)) course.content = content;
+
+    const updatedCourse = await course.save();
 
     res.status(200).json({
       status: "success",
       message: "Course updated successfully.",
-      data: course,
+      course: updatedCourse,
     });
   } catch (error) {
     console.error("Error updating course:", error);
-    res.status(500).json({ status: "fail", message: "Server error" });
+    res.status(500).json({ status: "fail", message: "Internal server error." });
   }
 };
 
